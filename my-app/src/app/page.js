@@ -33,7 +33,8 @@ export default function LoginPage() {
         router.push('/moje-zgloszenia');
       }
     } catch (err) {
-      alert('Zły email lub hasło!');
+      console.log('Pełny błąd z PocketBase:', err);
+      alert('Błąd: ' + err.message);
     }
   };
 
