@@ -1,14 +1,19 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { pb } from '@/lib/pocketbase';
+
+// Importy komponentów UI
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -18,7 +23,7 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-     
+      
       const authData = await pb.collection('uzytkownicy').authWithPassword(email, password);
       
       
@@ -30,10 +35,9 @@ export default function LoginPage() {
     } catch (err) {
       alert('Zły email lub hasło!');
     }
-}
-}
+  };
 
-return (
+  return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
@@ -63,3 +67,4 @@ return (
       </Card>
     </div>
   );
+}
