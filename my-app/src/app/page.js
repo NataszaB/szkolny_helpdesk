@@ -33,8 +33,13 @@ export default function LoginPage() {
         router.push('/moje-zgloszenia');
       }
     } catch (err) {
-      console.log('Pełny błąd z PocketBase:', err);
-      alert('Błąd: ' + err.message);
+  
+     console.log('Pełny obiekt błędu:', err);
+  
+      const status = err?.status || 'brak statusu';
+      const rawResponse = JSON.stringify(err?.response || err?.data || {}, null, 2);
+  
+     alert(`STATUS: ${status}\n\nODPOWIEDŹ SERWERA:\n${rawResponse}`);
     }
   };
 
