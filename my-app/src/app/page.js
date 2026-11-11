@@ -22,6 +22,7 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    console.log("Wywołuję zapytanie pod URL:", pb.buildURL('/api/collections/uzytkownicy/auth-with-password'));
     try {
       
       const authData = await pb.collection('uzytkownicy').authWithPassword(email, password);
