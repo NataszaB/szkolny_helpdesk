@@ -11,7 +11,7 @@ export default function MojeZgloszeniaPage() {
   const router = useRouter();
   const [lista, setLista] = useState([]);
   
-  // Zwykłe stany dla każdego pola z osobna (najprościej do zrozumienia)
+  
   const [tytul, setTytul] = useState('');
   const [opis, setOpis] = useState('');
   const [sala, setSala] = useState('1');
@@ -20,7 +20,7 @@ export default function MojeZgloszeniaPage() {
   const [plik, setPlik] = useState(null);
 
   useEffect(() => {
-    // Jak nie jesteś zalogowany, to wywala na stronę główną
+  
     if (!pb.authStore.isValid) {
       router.push('/');
     } else {
@@ -39,7 +39,7 @@ export default function MojeZgloszeniaPage() {
     e.preventDefault();
 
     try {
-      // Pakujemy dane do wysłania
+      
       const formData = new FormData();
       formData.append('tytul', tytul);
       formData.append('opis', opis);
@@ -48,21 +48,21 @@ export default function MojeZgloszeniaPage() {
       formData.append('priorytet', priorytet);
       formData.append('autor', pb.authStore.record.id);
 
-      // Jak ktoś wybrał plik, to go dorzucamy
+      
       if (plik) {
         formData.append('file', plik);
       }
 
       await pb.collection('zgloszenia').create(formData);
 
-      // Czyścimy pola po wysłaniu
+      
       setTytul('');
       setOpis('');
       setPlik(null);
       e.target.reset();
 
-      alert('Wysłano!');
-      pobierz(); // Odświeżamy listę
+      
+      pobierz();
     } catch (blad) {
       alert('Coś poszło nie tak: ' + blad.message);
     }
