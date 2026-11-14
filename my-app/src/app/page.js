@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { pb } from '@/lib/pocketbase';
 
-// Importy komponentów UI
+
 import {
   Card,
   CardContent,

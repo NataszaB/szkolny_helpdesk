@@ -47,7 +47,7 @@ export default function MojeZgloszeniaPage() {
       formData.append('kategoria', kategoria);
       formData.append('priorytet', priorytet);
       formData.append('autor', pb.authStore.record.id);
-
+      formData.append('status', 'nowe');
       
       if (plik) {
         formData.append('file', plik);
@@ -115,17 +115,34 @@ export default function MojeZgloszeniaPage() {
         </CardContent>
       </Card>
 {/* Lista zgloszen uzytkownika  */}
-      <div className="space-y-2">
-        {lista.map((z) => (
-          <Card key={z.id}>
-            <CardContent className="pt-4">
-              <p className="font-bold">{z.tytul} (Sala {z.sala})</p>
-              <p className="text-sm text-gray-600">{z.opis}</p>
-              <p className="text-xs text-gray-400 mt-1">{z.kategoria} • priorytet: {z.priorytet}</p>
+   <div className="space-y-2">
+        <h2 className="font-bold">Twoje zgłoszenia:</h2>
+        
+        {lista.length === 0 && (
+          <p className="text-sm text-gray-500">Nie masz jeszcze żadnych zgłoszeń.</p>
+        )}
+
+        {lista.map((item) => (
+          <Card key={item.id}>
+            <CardContent className="pt-4 space-y-1">
+              <div className="flex justify-between items-center">
+                <p className="font-bold">{item.tytul}</p>
+                
+               
+                <span className="text-xs font-semibold px-2 py-1 rounded bg-blue-100 text-blue-800">
+                  {item.status}
+                </span>
+              </div>
+              
+              <p className="text-sm">{item.opis}</p>
+              <p className="text-xs text-gray-500">
+                Sala: {item.sala} | Kategoria: {item.kategoria} | Priorytet: {item.priorytet}
+              </p>
             </CardContent>
           </Card>
         ))}
       </div>
-    </div>
+      </div>
+  
   );
 }
