@@ -151,7 +151,7 @@ export default function MojeZgloszeniaPage() {
               <p className="text-xs text-gray-500">
                 Sala: {item.sala} | Kategoria: {item.kategoria} | Priorytet: {item.priorytet}
               </p>
-                        {item.file && (
+               {item.file && (
             <img
               src={pb.files.getURL(item, item.file)}
               alt="Załącznik"
