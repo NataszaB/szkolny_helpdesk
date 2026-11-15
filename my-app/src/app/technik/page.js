@@ -91,7 +91,7 @@ async function zapiszZmiany(dane) {
         <Button variant="outline" onClick={wyloguj}>Wyloguj</Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded border">
-  <div>
+  
     {edytowaneZgloszenie && (
   <Card className="border-blue-500">
     <CardHeader>
@@ -124,6 +124,7 @@ async function zapiszZmiany(dane) {
     </CardContent>
   </Card>
 )}
+<div>
     <label className="text-xs font-bold block mb-1">Filtruj po statusie:</label>
     <select
       value={filtrStatus}
