@@ -12,6 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+const zasadyEdycji = z.object({
+  status: z.string(),
+  komentarz: z.string().min(3, 'Komentarz musi mieć minimum 3 znaki'),
+});
 
 export default function TechnikPage() {
   const router = useRouter();
@@ -19,6 +29,12 @@ export default function TechnikPage() {
   const [filtrStatus, setFiltrStatus] = useState('wszystkie');
   const [filtrSala, setFiltrSala] = useState('wszystkie');
   const [filtrPriorytet, setFiltrPriorytet] = useState('wszystkie');
+const [edytowaneZgloszenie, setEdytowaneZgloszenie] = useState(null);
+
+  const form = useForm({
+   resolver: zodResolver(zasadyEdycji),
+  });
+
 
   useEffect(() => {
     if (!pb.authStore.isValid || pb.authStore.record?.rola !== 'technik') {
@@ -35,6 +51,28 @@ export default function TechnikPage() {
     setLista(dane);
   }
 
+function otworzEdycje(item) {
+  setEdytowaneZgloszenie(item);
+  form.reset({
+    status: item.status || 'nowe',
+    komentarz: item.komentarz || '',
+  });
+}
+
+async function zapiszZmiany(dane) {
+  try {
+    await pb.collection('zgloszenia').update(edytowaneZgloszenie.id, {
+      status: dane.status,
+      komentarz: dane.komentarz,
+    });
+
+    setEdytowaneZgloszenie(null);
+    alert('Zaktualizowano zgłoszenie!');
+    pobierz();
+  } catch (blad) {
+    alert('Błąd zapisu: ' + blad.message);
+  }
+}
   function wyloguj() {
     pb.authStore.clear();
     router.push('/');
@@ -54,6 +92,38 @@ export default function TechnikPage() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded border">
   <div>
+    {edytowaneZgloszenie && (
+  <Card className="border-blue-500">
+    <CardHeader>
+      <CardTitle>Edycja zgłoszenia: {edytowaneZgloszenie.tytul}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <form onSubmit={form.handleSubmit(zapiszZmiany)} className="space-y-3">
+        <div>
+          <label className="text-xs font-bold block mb-1">Status:</label>
+          <select {...form.register('status')} className="w-full border p-2 rounded">
+            <option value="nowe">Nowe</option>
+            <option value="w realizacji">W realizacji</option>
+            <option value="zamkniete">Zamknięte</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="text-xs font-bold block mb-1">Komentarz technika:</label>
+          <Input placeholder="Wpisz notatkę lub rozwiązanie..." {...form.register('komentarz')} />
+          <p className="text-xs text-red-500 mt-1">{form.formState.errors.komentarz?.message}</p>
+        </div>
+
+        <div className="flex gap-2">
+          <Button type="submit">Zapisz zmiany</Button>
+          <Button type="button" variant="outline" onClick={() => setEdytowaneZgloszenie(null)}>
+            Anuluj
+          </Button>
+        </div>
+      </form>
+    </CardContent>
+  </Card>
+)}
     <label className="text-xs font-bold block mb-1">Filtruj po statusie:</label>
     <select
       value={filtrStatus}
@@ -107,6 +177,7 @@ export default function TechnikPage() {
               <TableHead>Priorytet</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Komentarz</TableHead>
+              <TableHead>Akcja</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -129,6 +200,11 @@ export default function TechnikPage() {
                 <TableCell>{item.priorytet}</TableCell>
                 <TableCell>{item.status}</TableCell>
                 <TableCell>{item.komentarz || '-'}</TableCell>
+                <TableCell>
+                  <Button size="sm" onClick={() => otworzEdycje(item)}>
+                   Edytuj
+                  </Button>
+              </TableCell>
               </TableRow>
             ))}
           </TableBody>
