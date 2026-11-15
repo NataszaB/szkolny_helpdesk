@@ -90,7 +90,7 @@ async function zapiszZmiany(dane) {
         <h1 className="text-2xl font-bold">Wszystkie zgłoszenia</h1>
         <Button variant="outline" onClick={wyloguj}>Wyloguj</Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded border">
+      
   
     {edytowaneZgloszenie && (
   <Card className="border-blue-500">
@@ -124,6 +124,7 @@ async function zapiszZmiany(dane) {
     </CardContent>
   </Card>
 )}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded border">
 <div>
     <label className="text-xs font-bold block mb-1">Filtruj po statusie:</label>
     <select
