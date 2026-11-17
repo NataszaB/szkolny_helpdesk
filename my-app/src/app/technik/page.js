@@ -81,10 +81,7 @@ async function zapiszZmiany(dane) {
     alert('Błąd zapisu: ' + blad.message);
   }
 }
-  function wyloguj() {
-    pb.authStore.clear();
-    router.push('/');
-  }
+ 
   const przefiltrowanaLista = lista.filter((item) => {
   if (filtrStatus !== 'wszystkie' && item.status !== filtrStatus) return false;
   if (filtrSala !== 'wszystkie' && item.sala !== filtrSala) return false;
@@ -117,7 +114,10 @@ for (let nrSali = 1; nrSali <= 10; nrSali++) {
   }
 }
 };
-
+ function wyloguj() {
+    pb.authStore.clear();
+    router.push('/');
+  }
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
