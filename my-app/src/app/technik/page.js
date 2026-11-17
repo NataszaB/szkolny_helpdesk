@@ -108,17 +108,18 @@ for (let nrSali = 1; nrSali <= 10; nrSali++) {
     }
   }
 
-  if (ileWTejSali > maxZgloszen) {
+if (ileWTejSali > maxZgloszen) {
     maxZgloszen = ileWTejSali;
-    najczestszaSala = 'Sala ' + nrSali + ' (' + rekord + ')';
+    najczestszaSala = 'Sala ' + nrSali + ' (' + maxZgloszen + ')';
   }
 }
-};
- function wyloguj() {
-    pb.authStore.clear();
-    router.push('/');
-  }
-  return (
+
+function wyloguj() {
+  pb.authStore.clear();
+  router.push('/');
+}
+
+return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Wszystkie zgłoszenia</h1>
@@ -277,3 +278,4 @@ for (let nrSali = 1; nrSali <= 10; nrSali++) {
       </div>
     </div>
   );
+}
