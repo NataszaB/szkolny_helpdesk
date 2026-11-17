@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
+import { Motyw } from '@/components/Motyw';
 
 // Zasady sprawdzania pól
 const zasady = z.object({
@@ -81,6 +82,7 @@ export default function MojeZgloszeniaPage() {
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-bold">Moje zgłoszenia</h1>
+        <Motyw />
         <Button variant="outline" onClick={wyloguj}>
           Wyloguj
         </Button>

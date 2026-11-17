@@ -17,6 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Motyw } from '@/components/Motyw';
 
 const zasadyEdycji = z.object({
   status: z.string(),
@@ -139,7 +140,9 @@ return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Wszystkie zgłoszenia</h1>
+        <Motyw />
         <Button variant="outline" onClick={wyloguj}>Wyloguj</Button>
+        
       </div>
      {/* Dashboard*/}
   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
