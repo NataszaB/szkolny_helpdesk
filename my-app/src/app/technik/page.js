@@ -227,7 +227,7 @@ return (
     <select
       value={filtrSala}
       onChange={(e) => setFiltrSala(e.target.value)}
-      className="w-full border p-2 rounded bg-white text-sm"
+      className="w-full border p-2 rounded text-sm"
     >
       <option value="wszystkie">Wszystkie sale</option>
       <option value="1">Sala 1</option>
@@ -243,7 +243,7 @@ return (
     <select
       value={filtrPriorytet}
       onChange={(e) => setFiltrPriorytet(e.target.value)}
-      className="w-full border p-2 rounded bg-white text-sm"
+      className="w-full border p-2 rounded text-sm"
     >
       <option value="wszystkie">Wszystkie priorytety</option>
       <option value="niski">Niski</option>
