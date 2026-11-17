@@ -207,13 +207,13 @@ return (
     </CardContent>
   </Card>
 )}
-<div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded border">
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded border">
 <div>
     <label className="text-xs font-bold block mb-1">Filtruj po statusie:</label>
     <select
       value={filtrStatus}
       onChange={(e) => setFiltrStatus(e.target.value)}
-      className="w-full border p-2 rounded bg-white text-sm"
+      className="w-full border p-2 rounded text-sm"
     >
       <option value="wszystkie">Wszystkie statusy</option>
       <option value="nowe">Nowe</option>
@@ -301,7 +301,7 @@ return (
           <p className="text-sm text-gray-500">Brak zarejestrowanych zmian.</p>
         )}
         {historia.map((h) => (
-          <div key={h.id} className="text-sm border p-3 rounded bg-gray-50">
+          <div key={h.id} className="text-sm border p-3 rounded">
             <b>{h.expand?.zgloszenie?.tytul || 'Zgłoszenie'}</b>: zmiana z{' '}
             <span className="font-semibold">{h.stary_status}</span> na{' '}
             <span className="font-semibold">{h.nowy_status}</span> — przez:{' '}
