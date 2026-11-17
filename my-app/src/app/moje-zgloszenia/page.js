@@ -46,20 +46,17 @@ export default function MojeZgloszeniaPage() {
     setLista(dane);
   }
 
-  async function wyslij(e) {
-    e.preventDefault();
-
+  async function wyslij(dane) {
     try {
-      
       const formData = new FormData();
-      formData.append('tytul', tytul);
-      formData.append('opis', opis);
-      formData.append('sala', sala);
-      formData.append('kategoria', kategoria);
-      formData.append('priorytet', priorytet);
-      formData.append('autor', pb.authStore.record.id);
+      formData.append('tytul', dane.tytul);
+      formData.append('opis', dane.opis);
+      formData.append('sala', dane.sala);
+      formData.append('kategoria', dane.kategoria);
+      formData.append('priorytet', dane.priorytet);
+      formData.append('autor', pb.authStore.model.id);
       formData.append('status', 'nowe');
-      
+
       if (plik) {
         formData.append('file', plik);
       }
@@ -67,11 +64,8 @@ export default function MojeZgloszeniaPage() {
       await pb.collection('zgloszenia').create(formData);
 
       form.reset();
-     
       setPlik(null);
-      e.target.reset();
-
-      
+      alert('Wysłano!');
       pobierz();
     } catch (blad) {
       alert('Blad: ' + blad.message);
@@ -96,10 +90,12 @@ export default function MojeZgloszeniaPage() {
         <CardHeader><CardTitle>Nowe zgłoszenie</CardTitle></CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(wyslij)} className="space-y-3">
-            <Input placeholder="Tytuł" {...form.register('tytul')} />
-            <p>{form.formState.errors.tytul?.message}</p>
-            <Input placeholder="Opis problemu" {...form.register('opis')}  />
-            <p>{form.formState.errors.opis?.message}</p>
+
+          <Input placeholder="Tytuł" {...form.register('tytul')} />
+          <p className="text-xs text-red-500">{form.formState.errors.tytul?.message}</p>
+
+          <Input placeholder="Opis problemu" {...form.register('opis')} />
+          <p className="text-xs text-red-500">{form.formState.errors.opis?.message}</p>
 
             
             <div className="grid grid-cols-3 gap-2">
