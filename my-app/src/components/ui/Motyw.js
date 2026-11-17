@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 
-export function ThemeToggle() {
+export function Motyw() {
   const [ciemny, setCiemny] = useState(false);
 
 
