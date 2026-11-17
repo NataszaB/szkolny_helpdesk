@@ -57,6 +57,12 @@ async function pobierz() {
     sort: '-created',
   });
   setLista(dane);
+
+  const wpisy = await pb.collection('ticket_events').getFullList({
+      sort: '-created',
+      expand: 'user,zgloszenie',
+    });
+    setHistoria(wpisy);
 }
 
 function otworzEdycje(item) {
@@ -70,10 +76,10 @@ function otworzEdycje(item) {
 async function zapiszZmiany(dane) {
   try {
 // ticket events
-    if (edytowaneZgloszenie.status !== dane.status) {
+if (edytowaneZgloszenie.status !== dane.status) {
       await pb.collection('ticket_events').create({
         zgloszenie: edytowaneZgloszenie.id,
-        kto: pb.authStore.model.id,
+        user: pb.authStore.record.id,
         stary_status: edytowaneZgloszenie.status,
         nowy_status: dane.status,
       });
@@ -286,6 +292,21 @@ return (
           </TableBody>
         </Table>
       </div>
+      <div className="space-y-2 pt-4">
+        <h2 className="text-lg font-bold">Historia zmian statusów</h2>
+        {historia.length === 0 && (
+          <p className="text-sm text-gray-500">Brak zarejestrowanych zmian.</p>
+        )}
+        {historia.map((h) => (
+          <div key={h.id} className="text-sm border p-3 rounded bg-gray-50">
+            <b>{h.expand?.zgloszenie?.tytul || 'Zgłoszenie'}</b>: zmiana z{' '}
+            <span className="font-semibold">{h.stary_status}</span> na{' '}
+            <span className="font-semibold">{h.nowy_status}</span> — przez:{' '}
+            {h.expand?.user?.email || h.user} ({new Date(h.created).toLocaleString('pl-PL')})
+          </div>
+        ))}
+      </div>
     </div>
+    
   );
 }
