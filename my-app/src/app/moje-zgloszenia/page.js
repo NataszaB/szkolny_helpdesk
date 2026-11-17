@@ -11,7 +11,6 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { Motyw } from '@/components/Motyw';
 
-// Zasady sprawdzania pól
 const zasady = z.object({
   tytul: z.string().min(3, 'Wpisz minimum 3 znaki'),
   opis: z.string().min(5, 'Opisz problem (min. 5 znaków)'),
@@ -41,7 +40,7 @@ export default function MojeZgloszeniaPage() {
 
   async function pobierz() {
     const dane = await pb.collection('zgloszenia').getFullList({
-      filter: `autor = "${pb.authStore.model.id}"`,
+      filter: `autor = "${pb.authStore.record.id}"`,
       sort: '-created',
     });
     setLista(dane);
@@ -55,7 +54,7 @@ export default function MojeZgloszeniaPage() {
       formData.append('sala', dane.sala);
       formData.append('kategoria', dane.kategoria);
       formData.append('priorytet', dane.priorytet);
-      formData.append('autor', pb.authStore.model.id);
+      formData.append('autor', pb.authStore.record.id);
       formData.append('status', 'nowe');
 
       if (plik) {
@@ -125,7 +124,7 @@ export default function MojeZgloszeniaPage() {
           </form>
         </CardContent>
       </Card>
-{/* Lista zgloszen uzytkownika  */}
+{/* Lista zgloszen*/}
    <div className="space-y-2">
         <h2 className="font-bold">Twoje zgłoszenia:</h2>
         

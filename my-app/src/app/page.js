@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { pb } from '@/lib/pocketbase';
-
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 import {
   Card,
@@ -15,34 +16,31 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
+const zasady = z.object({
+  email: z.email('Wpisz poprawny email'),
+  password: z.string().min(1, 'Wpisz hasło'),
+});
+
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    console.log("Wywołuję zapytanie pod URL:", pb.buildURL('/api/collections/uzytkownicy/auth-with-password'));
+  const form = useForm({
+    resolver: zodResolver(zasady),
+  });
+
+  async function zaloguj(dane) {
     try {
-      
-      const authData = await pb.collection('uzytkownicy').authWithPassword(email, password);
-      
-      
+      const authData = await pb.collection('uzytkownicy').authWithPassword(dane.email, dane.password);
+
       if (authData.record.rola === 'technik') {
         router.push('/technik');
       } else {
         router.push('/moje-zgloszenia');
       }
-    } catch (err) {
-  
-     console.log('Pełny obiekt błędu:', err);
-  
-      const status = err?.status || 'brak statusu';
-      const rawResponse = JSON.stringify(err?.response || err?.data || {}, null, 2);
-  
-     alert(`STATUS: ${status}\n\nODPOWIEDŹ SERWERA:\n${rawResponse}`);
+    } catch (blad) {
+      alert('Zły email albo hasło');
     }
-  };
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
@@ -50,22 +48,17 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle className="text-center">Zaloguj się</CardTitle>
         </CardHeader>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={form.handleSubmit(zaloguj)}>
           <CardContent className="space-y-4">
-            <Input 
-              type="email" 
-              placeholder="Email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              required 
-            />
-            <Input 
-              type="password" 
-              placeholder="Hasło" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              required 
-            />
+            <div>
+              <Input type="email" placeholder="Email" {...form.register('email')} />
+              <p className="text-xs text-red-500 mt-1">{form.formState.errors.email?.message}</p>
+            </div>
+
+            <div>
+              <Input type="password" placeholder="Hasło" {...form.register('password')} />
+              <p className="text-xs text-red-500 mt-1">{form.formState.errors.password?.message}</p>
+            </div>
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full">Zaloguj</Button>
