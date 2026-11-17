@@ -37,22 +37,27 @@ const [edytowaneZgloszenie, setEdytowaneZgloszenie] = useState(null);
 
 
 useEffect(() => {
-  if (!pb.authStore.isValid || pb.authStore.record?.rola !== 'technik') {
+  if (!pb.authStore.isValid || pb.authStore.model?.rola !== 'technik') {
     router.push('/');
   } else {
     pobierz();
 
-    // Nasłuchiwanie na zywo
     pb.collection('zgloszenia').subscribe('*', () => {
       pobierz();
     });
 
-    
     return () => {
       pb.collection('zgloszenia').unsubscribe('*');
     };
   }
 }, [router]);
+
+async function pobierz() {
+  const dane = await pb.collection('zgloszenia').getFullList({
+    sort: '-created',
+  });
+  setLista(dane);
+}
 
 function otworzEdycje(item) {
   setEdytowaneZgloszenie(item);
