@@ -29,8 +29,8 @@ export default function TechnikPage() {
   const [filtrStatus, setFiltrStatus] = useState('wszystkie');
   const [filtrSala, setFiltrSala] = useState('wszystkie');
   const [filtrPriorytet, setFiltrPriorytet] = useState('wszystkie');
-const [edytowaneZgloszenie, setEdytowaneZgloszenie] = useState(null);
-
+  const [edytowaneZgloszenie, setEdytowaneZgloszenie] = useState(null);
+  const [historia, setHistoria] = useState([]);
   const form = useForm({
    resolver: zodResolver(zasadyEdycji),
   });
