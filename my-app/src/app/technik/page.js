@@ -69,13 +69,23 @@ function otworzEdycje(item) {
 
 async function zapiszZmiany(dane) {
   try {
+// ticket events
+    if (edytowaneZgloszenie.status !== dane.status) {
+      await pb.collection('ticket_events').create({
+        zgloszenie: edytowaneZgloszenie.id,
+        kto: pb.authStore.model.id,
+        stary_status: edytowaneZgloszenie.status,
+        nowy_status: dane.status,
+      });
+    }
+
     await pb.collection('zgloszenia').update(edytowaneZgloszenie.id, {
       status: dane.status,
       komentarz: dane.komentarz,
     });
 
     setEdytowaneZgloszenie(null);
-    alert('Zaktualizowano zgłoszenie!');
+    alert('Zaktualizowano zgłoszenie');
     pobierz();
   } catch (blad) {
     alert('Błąd zapisu: ' + blad.message);
