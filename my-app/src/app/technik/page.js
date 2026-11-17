@@ -92,13 +92,68 @@ async function zapiszZmiany(dane) {
   return true;
 });
 
+const otwarte = lista.filter((item) => item.status !== 'zamkniete').length;
+
+
+const sprzet = lista.filter((item) => item.kategoria === 'sprzet komputerowy').length;
+const multimedia = lista.filter((item) => item.kategoria === 'multimedia').length;
+
+
+const licznikSal = {};
+let najczestszaSala = '-';
+let maxZgloszen = 0;
+for (let nrSali = 1; nrSali <= 10; nrSali++) {
+  let ileWTejSali = 0;
+
+  for (let i = 0; i < lista.length; i++) {
+    if (lista[i].sala == nrSali) {
+      ileWTejSali = ileWTejSali + 1;
+    }
+  }
+
+  if (ileWTejSali > maxZgloszen) {
+    maxZgloszen = ileWTejSali;
+    najczestszaSala = 'Sala ' + nrSali + ' (' + rekord + ')';
+  }
+}
+};
+
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Wszystkie zgłoszenia</h1>
         <Button variant="outline" onClick={wyloguj}>Wyloguj</Button>
       </div>
-      
+     {/* Dashboard*/}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm text-gray-500">Otwarte zgłoszenia</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-2xl font-bold">{otwarte}</p>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm text-gray-500">Zgłoszenia wg kategorii</CardTitle>
+      </CardHeader>
+      <CardContent className="text-sm space-y-1">
+        <p>Sprzęt komputerowy: <b>{sprzet}</b></p>
+        <p>Multimedia: <b>{multimedia}</b></p>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm text-gray-500">Najczęstsza sala</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-2xl font-bold">{najczestszaSala}</p>
+     </CardContent>
+    </Card>
+  </div> 
   
     {edytowaneZgloszenie && (
   <Card className="border-blue-500">
@@ -222,4 +277,3 @@ async function zapiszZmiany(dane) {
       </div>
     </div>
   );
-}
