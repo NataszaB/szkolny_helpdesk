@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Szkolny helpdesk
 
-## Getting Started
+Prosta aplikacja do zgłaszania awarii w salach (komputery, rzutniki itp.) zrobiona w **Next.js** i podpięta pod bazę **PocketBase**.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Zawartość aplikacji
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Logowanie:** Dwa osobne widoki – zwykły użytkownik widzi tylko swoje zgłoszenia, a technik widzi wszystko.
+- **Użytkownik (`/moje-zgloszenia`):**
+  - Może dodać nowe zgłoszenie (tytuł, opis, sala, kategoria, priorytet i zdjęcie).
+  - Formularz sprawdza, czy pola nie są puste (walidacja `zod` + `react-hook-form`).
+  - Widzi listę swoich zgłoszeń, ich status i wrzucone zdjęcia.
+- **Technik (`/technik`):**
+  - **Statystyki na górze:** ile jest otwartych zgłoszeń, ile w jakiej kategorii i w której sali psuje się najwięcej rzeczy.
+  - **Tabela zgłoszeń:** może filtrować po statusie, sali i priorytecie.
+  - **Edycja:** zmienia status (nowe / w realizacji / zamkniete) i dopisuje komentarz.
+  - **Na żywo (Realtime):** jak ktoś doda zgłoszenie, u technika od razu pojawia się na liście bez odświeżania strony.
+  - **Historia zmian:** każda zmiana statusu zapisuje się na dole strony (kto zmienił, kiedy i z jakiego statusu na jaki).
+- **Tryb ciemny i jasny:** Przycisk w rogu zmienia kolory strony.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Wygląd aplikacji
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+### Logowanie
+![Logowanie](./screenshots/logowanie.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Panel użytkownika
+![Panel użytkownika](./screenshots/uzytkownik.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Panel technika
+![Panel technika](./screenshots/technik.png)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Zwykły użytkownik:**
+  - Email: `user@gmail.com`
+  - Hasło: `testtest`
+
+- **Technik:**
+  - Email: `technik@gmail.com`
+  - Hasło: `testtest`
+
+## Coolify 
+Strona stoi na serwerze vps na ktorym wdrozony jesy Coolify. W nim zainstalowane dwie uslugi:
+
+    -**Pocketbase** na którym przechowywane są wszystkie dane ze strony
+    -**Next js** pod główną subdomeną aplikacji. Wykorzystuje zmienną środowiskową `NEXT_PUBLIC_POCKETBASE_URL` wskazującą na subdomenę PocketBase
