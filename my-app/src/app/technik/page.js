@@ -36,20 +36,23 @@ const [edytowaneZgloszenie, setEdytowaneZgloszenie] = useState(null);
   });
 
 
-  useEffect(() => {
-    if (!pb.authStore.isValid || pb.authStore.record?.rola !== 'technik') {
-      router.push('/');
-    } else {
-      pobierz();
-    }
-  }, [router]);
+useEffect(() => {
+  if (!pb.authStore.isValid || pb.authStore.record?.rola !== 'technik') {
+    router.push('/');
+  } else {
+    pobierz();
 
-  async function pobierz() {
-    const dane = await pb.collection('zgloszenia').getFullList({
-      sort: '-created',
+    // Nasłuchiwanie na zywo
+    pb.collection('zgloszenia').subscribe('*', () => {
+      pobierz();
     });
-    setLista(dane);
+
+    
+    return () => {
+      pb.collection('zgloszenia').unsubscribe('*');
+    };
   }
+}, [router]);
 
 function otworzEdycje(item) {
   setEdytowaneZgloszenie(item);
