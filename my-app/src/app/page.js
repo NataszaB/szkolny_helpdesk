@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { pb } from '@/lib/pocketbase';
 import { useForm } from 'react-hook-form';
@@ -18,18 +19,30 @@ import { Button } from '@/components/ui/button';
 
 const zasady = z.object({
   email: z.email('Wpisz poprawny email'),
-  password: z.string().min(1, 'Wpisz hasło'),
+  password: z.string().min(8, 'Hasło musi mieć min. 8 znaków'),
 });
 
 export default function LoginPage() {
   const router = useRouter();
+  const [czyRejestracja, setCzyRejestracja] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(zasady),
   });
 
-  async function zaloguj(dane) {
+  async function obsluzFormularz(dane) {
     try {
+      if (czyRejestracja) {
+        // Tworzenie nowego konta w PocketBase
+        await pb.collection('uzytkownicy').create({
+          email: dane.email,
+          password: dane.password,
+          passwordConfirm: dane.password,
+          rola: 'uzytkownik',
+        });
+      }
+
+   
       const authData = await pb.collection('uzytkownicy').authWithPassword(dane.email, dane.password);
 
       if (authData.record.rola === 'technik') {
@@ -38,7 +51,7 @@ export default function LoginPage() {
         router.push('/moje-zgloszenia');
       }
     } catch (blad) {
-      alert('Zły email albo hasło');
+      alert(czyRejestracja ? 'Nie udało się założyć konta (może email jest już zajęty?)' : 'Zły email albo hasło');
     }
   }
 
@@ -46,9 +59,11 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-center">Zaloguj się</CardTitle>
+          <CardTitle className="text-center">
+            {czyRejestracja ? 'Załóż konto' : 'Zaloguj się'}
+          </CardTitle>
         </CardHeader>
-        <form onSubmit={form.handleSubmit(zaloguj)}>
+        <form onSubmit={form.handleSubmit(obsluzFormularz)}>
           <CardContent className="space-y-4">
             <div>
               <Input type="email" placeholder="Email" {...form.register('email')} />
@@ -60,8 +75,22 @@ export default function LoginPage() {
               <p className="text-xs text-red-500 mt-1">{form.formState.errors.password?.message}</p>
             </div>
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full">Zaloguj</Button>
+          <CardFooter className="flex flex-col space-y-2">
+            <Button type="submit" className="w-full">
+              {czyRejestracja ? 'Zarejestruj' : 'Zaloguj'}
+            </Button>
+
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full text-xs"
+              onClick={() => {
+                setCzyRejestracja(!czyRejestracja);
+                form.clearErrors();
+              }}
+            >
+              {czyRejestracja ? 'Masz już konto? Zaloguj się' : 'Nie masz konta? Zarejestruj się'}
+            </Button>
           </CardFooter>
         </form>
       </Card>
